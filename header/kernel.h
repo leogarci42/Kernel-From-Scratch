@@ -23,6 +23,9 @@ void change_color();
 void switch_screen(int screen_num);
 int	putstr(const char *s);
 
+void gdt_init(void);
+void gdt_install(void);
+
 /*			keyboard handler		*/
 
 uint_8t inb(uint_16t port);

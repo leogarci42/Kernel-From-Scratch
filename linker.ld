@@ -7,6 +7,12 @@ SECTIONS
         KEEP(*(.multiboot)) 
     }
 
+    .gdt : {
+        __gdt_start = .;
+        *(.gdt)
+        __gdt_end = .;
+    }
+
     .text : {
         *(.text)
         *(.rodata)
