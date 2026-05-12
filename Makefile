@@ -7,7 +7,7 @@ BOLD_CMD   := $(shell tput bold 2>/dev/null)
 
 export RESET_CMD RED_CMD GREEN_CMD YELLOW_CMD BLUE_CMD BOLD_CMD
 
-NAME     := kfs-1
+NAME     := kfs-2
 CC       := cc
 AS       := nasm
 LD       := ld
