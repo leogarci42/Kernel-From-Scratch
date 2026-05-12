@@ -16,8 +16,13 @@ void kernel_panic(const char *msg)
 	putstr("                             *** KERNEL PANIC ***\n");
 	putstr("\n");
 	if (msg)
-		printf("                               Reason: %s\n", msg);
-	printf("                               System halted.\n\n");
+	{
+		int pad = (80 - 8 - strlen(msg)) / 2;
+		for (int i = 0; i < pad; i++)
+			putstr(" ");
+		printf("Reason: %s\n", msg);
+	}
+	putstr("                                System halted.\n\n");
 
 	while (1)
 	{

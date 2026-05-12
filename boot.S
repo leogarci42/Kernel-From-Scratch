@@ -10,8 +10,13 @@ SECTION .multiboot
 	dd MB_FLAGS
 	dd MB_CHECK
 
+SECTION .data
+	mboot_magic_saved: dd 0
+	mboot_header_saved: dd 0
+
 SECTION .text
 	global start
+	global mboot_magic_saved
 	extern kernel_main
 	extern gdt_init
 	extern gdt_install
@@ -24,7 +29,9 @@ SECTION .text
 GDTADDR   equ 0x00000800
 
 start:
-	mov esp, __stack_top
+	mov [mboot_magic_saved], eax   ; Save mboot_magic to data section FIRST
+	mov [mboot_header_saved], ebx  ; Save mboot_header to data section FIRST
+	mov esp, __stack_top           ; Now set stack pointer
 	push 0
 	popf
 	call gdt_init
@@ -38,6 +45,10 @@ start:
 	; call init_memory_paging
 	; call load_page_directory
 	; call enable_paging
+	mov eax, [mboot_magic_saved]   ; Restore mboot_magic from data section
+	mov ebx, [mboot_header_saved]  ; Restore mboot_header from data section
+	push ebx             ; Push for kernel_main
+	push eax
 	call kernel_main
 
 ; load_page_directory:
