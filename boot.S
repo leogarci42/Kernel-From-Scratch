@@ -29,9 +29,9 @@ SECTION .text
 GDTADDR   equ 0x00000800
 
 start:
-	mov [mboot_magic_saved], eax   ; Save mboot_magic to data section FIRST
-	mov [mboot_header_saved], ebx  ; Save mboot_header to data section FIRST
-	mov esp, __stack_top           ; Now set stack pointer
+	mov [mboot_magic_saved], eax
+	mov [mboot_header_saved], ebx
+	mov esp, __stack_top           ; now set stack pointer
 	push 0
 	popf
 	call gdt_init
@@ -42,25 +42,25 @@ start:
 	sub ecx, __gdt_start
 	rep movsb
 	call gdt_install
-	; call init_memory_paging
-	; call load_page_directory
-	; call enable_paging
-	mov eax, [mboot_magic_saved]   ; Restore mboot_magic from data section
-	mov ebx, [mboot_header_saved]  ; Restore mboot_header from data section
-	push ebx             ; Push for kernel_main
+	call init_memory_paging
+	call load_page_directory
+	call enable_paging
+	mov eax, [mboot_magic_saved]
+	mov ebx, [mboot_header_saved]
+	push ebx
 	push eax
 	call kernel_main
 
-; load_page_directory:
-; 	mov eax, page_dir
-; 	mov cr3, eax
-; 	ret
+load_page_directory:
+	mov eax, page_dir
+	mov cr3, eax
+	ret
 
-; enable_paging:
-; 	mov eax, cr0
-; 	or eax, 0x80000000
-; 	mov cr0, eax
-; 	ret
+enable_paging:
+	mov eax, cr0
+	or eax, 0x80000000
+	mov cr0, eax
+	ret
 
 .hang:
 	cli

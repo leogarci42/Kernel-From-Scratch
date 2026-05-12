@@ -20,6 +20,7 @@ SRC      := kernel-srcs/kernel_main.c \
             kernel-srcs/helpers/helper_vga.c \
 			kernel-srcs/device/keyboard_handler.c \
 			kernel-srcs/helpers/helpers.c \
+			kernel-srcs/memory/memory_paging.c \
 			kernel-srcs/memory/DT/gdt.c \
 			kernel-srcs/helpers/printf/printf.c \
 			kernel-srcs/helpers/printf/printf_helpers.c
