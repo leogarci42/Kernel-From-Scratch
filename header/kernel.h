@@ -22,7 +22,7 @@ void putchar(char c);
 void change_color();
 void switch_screen(int screen_num);
 int	putstr(const char *s);
-
+int	printf(const char *str, ...);
 void gdt_init(void);
 void gdt_install(void);
 
@@ -30,5 +30,9 @@ void gdt_install(void);
 
 uint_8t inb(uint_16t port);
 void outb(uint_16t port, uint_8t val);
+
+/*			kernel panic		*/
+
+void kernel_panic(const char *msg);
 
 #endif

@@ -3,6 +3,7 @@
 void kernel_main(void)
 {
 	init_screens();
+	kernel_panic("testing");
 	clear_screen();
 	putstr("42");
 	update_cursor(2);

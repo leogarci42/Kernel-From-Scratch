@@ -16,10 +16,11 @@ ASFLAGS  := -f elf32
 LDFLAGS  := -m elf_i386 -T linker.ld
 
 SRC      := kernel-srcs/kernel_main.c \
+			kernel-srcs/panic.c \
             kernel-srcs/helpers/helper_vga.c \
 			kernel-srcs/device/keyboard_handler.c \
 			kernel-srcs/helpers/helpers.c \
-			kernel-srcs/DT/gdt.c \
+			kernel-srcs/memory/DT/gdt.c \
 			kernel-srcs/helpers/printf/printf.c \
 			kernel-srcs/helpers/printf/printf_helpers.c
 ASM_SRC  := boot.S 
