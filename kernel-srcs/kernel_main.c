@@ -7,7 +7,7 @@ void kernel_main(uint_32t mboot_magic, void *mboot_header)
 	clear_screen();
 	init_screens();
 	// printf("mboot_magic: 0x%x\n", mboot_magic);
-	if (mboot_magic != 0x1BADB002 && mboot_magic != 0x2BADB002) // QEMU takes 0x1 and leaves us with magic 0x2
+	if (mboot_magic != 0x1BADB002 && mboot_magic == 0x2BADB002) // QEMU takes 0x1 and leaves us with magic 0x2
 		kernel_panic("Invalid multiboot magic");
 	
 	putstr("42");
