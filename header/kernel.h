@@ -7,10 +7,10 @@
 typedef unsigned char uint_8t;
 typedef unsigned short uint_16t;
 typedef unsigned int uint_32t;
-typedef uint_8t bool;
+typedef uint_8t bool_t;
 
-#define true 1
-#define false 0
+#define true_t 1
+#define false_t 0
 
 /*		helper function for VGA		*/
 

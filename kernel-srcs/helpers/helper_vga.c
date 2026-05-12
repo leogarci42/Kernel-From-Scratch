@@ -9,7 +9,6 @@ int current_screen = 0;
 
 enum vga_colors vga_color = 15;
 
-volatile bool random_color_enabled = false;
 volatile uint_16t color = (15 << 8);
 volatile uint_32t i = 0;
 volatile uint_16t *vga = (volatile uint_16t *)0xB8000;

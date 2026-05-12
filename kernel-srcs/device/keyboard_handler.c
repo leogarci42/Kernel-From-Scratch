@@ -14,10 +14,10 @@ void outb(uint_16t port, uint_8t val)
 	asm volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-bool check_if_left_pos_empty(uint_32t pos)
+bool_t check_if_left_pos_empty(uint_32t pos)
 {
 	if (pos % MAX_WIDTH == 0)
-		return false;
+		return false_t;
 	return (vga[pos - 1] & 0xFF) == ' ' || (vga[pos - 1] & 0xFF) == 0;
 }
 
@@ -76,22 +76,22 @@ void move_cursor(uint_8t scancode)
 void keyboard_handler()
 {
 // why 0x60? Intel 8042 PS/2 Controller I/O port addr 
-	static bool ctrl_pressed = false;
-	static bool alt_pressed = false;
-	static bool prefix_e0 = false;
+	static bool_t ctrl_pressed = false_t;
+	static bool_t alt_pressed = false_t;
+	static bool_t prefix_e0 = false_t;
 	uint_8t scancode = inb(0x60);
 
 	// prefix e0 (for arrow keys)
 	if (scancode == 0xE0)
 	{
-		prefix_e0 = true;
+		prefix_e0 = true_t;
 		return;
 	}
 
 	// cursor movement
 	if (prefix_e0)
 	{
-		prefix_e0 = false;
+		prefix_e0 = false_t;
 		move_cursor(scancode);
 		return;
 	}
@@ -99,24 +99,24 @@ void keyboard_handler()
 	// ctrl
 	if (scancode == 0x1D)
 	{
-		ctrl_pressed = true;
+		ctrl_pressed = true_t;
 		return;
 	}
 	if (scancode == 0x9D)
 	{
-		ctrl_pressed = false;
+		ctrl_pressed = false_t;
 		return;
 	}
 
 	// alt
 	if (scancode == 0x38)
 	{
-		alt_pressed = true;
+		alt_pressed = true_t;
 		return;
 	}
 	if (scancode == 0xB8)
 	{
-		alt_pressed = false;
+		alt_pressed = false_t;
 		return;
 	}
 

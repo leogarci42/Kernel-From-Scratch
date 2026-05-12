@@ -1,44 +1,50 @@
 ENTRY(start)
 
+PHDRS
+{
+  text PT_LOAD FLAGS (READ|EXEC);
+  data PT_LOAD FLAGS (READ|WRITE);
+}
+
 SECTIONS
 {
-    . = 0x100000; 
-    .multiboot : { 
-        KEEP(*(.multiboot)) 
-    }
+    . = 0x100000;
 
+    .multiboot : { KEEP(*(.multiboot)) } :text
+
+    .text : {
+        *(.text)
+    } :text
+
+    .rodata : {
+        *(.rodata)
+    } :text
+
+    /* GDT placed after code/rodata so data PHDRS starts after text */
     .gdt : {
         __gdt_start = .;
         *(.gdt)
         __gdt_end = .;
-    }
-
-    .text : {
-        *(.text)
-        *(.rodata)
-    }
+    } :data
 
     .data : {
         *(.data)
-    }
+    } :data
 
-    .bss : {
+    .bss (NOLOAD) : {
         __bss_start = .;
         *(.bss)
         *(COMMON)
         __bss_end = .;
-    }
+    } :data
 
     end_of_kernel = .;
 
     .stack (NOLOAD) : {
         __stack_bottom = .;
-        . = . + 0x4000; 
+        . = . + 0x4000;
         __stack_top = .;
-    }
+    } :data
 
-    /DISCARD/ : { 
-        *(.eh_frame) 
-        *(.comment)
-    }
+    /DISCARD/ : { *(.eh_frame) *(.comment) }
 }

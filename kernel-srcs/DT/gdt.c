@@ -86,5 +86,5 @@ void gdt_init(void)
 
 void gdt_install(void)
 {
-	gdt_load(&gdt_ptr);
+	gdt_load((const struct gdtr *)(&gdt_ptr));
 }
