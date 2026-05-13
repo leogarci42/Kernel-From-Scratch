@@ -131,7 +131,10 @@ void dump_stack(void)
     asm volatile("mov %%ebp, %0" : "=r"(ebp));
     printf("\n");
     printf("\n");
-    printf("         KERNEL STACK TRACE            \n");
+	uint_32t pad = (80 - 8 - strlen("KERNEL STACK TRACE")) / 2;
+		for (uint_32t i = 0; i < pad; i++)
+			putstr(" ");
+    printf("KERNEL STACK TRACE\n");
     printf("\n");
     int depth = 0;
     while (ebp && depth < 32)

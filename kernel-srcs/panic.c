@@ -23,7 +23,7 @@ void kernel_panic(const char *msg)
 		printf("Reason: %s\n", msg);
 	}
 	putstr("                                System halted.\n\n");
-
+	dump_stack();
 	while (1)
 	{
 		__asm__ volatile ("hlt");
