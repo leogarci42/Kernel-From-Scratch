@@ -27,7 +27,7 @@ static volatile struct gdt_entry gdt[7];
 __attribute__((aligned(8), used))
 static volatile struct gdtr gdt_ptr;
 
-static void gdt_set_entry(int idx, uint_32t base, uint_32t limit, uint_8t access, uint_8t gran)
+static void gdt_set_entry(uint_32t idx, uint_32t base, uint_32t limit, uint_8t access, uint_8t gran)
 {
 	if (limit > 0xFFFFF)
 		return ((void)putstr("GDT cannot encode limits larger than 0xFFFFF, lame"));

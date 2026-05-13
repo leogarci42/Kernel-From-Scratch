@@ -1,11 +1,11 @@
 #include "kernel.h"
 #include "vga.h"
 
-const int MAX_HEIGHT = 25;
-const int MAX_WIDTH = 80;
+const uint_32t MAX_HEIGHT = 25;
+const uint_32t MAX_WIDTH = 80;
 
 struct screen screens[3];
-int current_screen = 0;
+uint_32t current_screen = 0;
 
 enum vga_colors vga_color = 15;
 
@@ -13,7 +13,7 @@ volatile uint_16t color = (15 << 8);
 volatile uint_32t i = 0;
 volatile uint_16t *vga = (volatile uint_16t *)0xB8000;
 
-void update_cursor(int pos)
+void update_cursor(uint_32t pos)
 {
 	// 0x0F is the register for the low byte of the cursor position
 	outb(0x3D4, 0x0F);
@@ -27,15 +27,15 @@ void update_cursor(int pos)
 void clear_screen()
 {
 	// bc GRUB leaves garbage on screen
-	for (int i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
+	for (uint_32t i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
 		vga[i] = (uint_16t)0x0720;
 }
 
 void init_screens(void)
 {
-	for (int s = 0; s < 3; s++)
+	for (uint_32t s = 0; s < 3; s++)
 	{
-		for (int j = 0; j < MAX_WIDTH * MAX_HEIGHT; j++)
+		for (uint_32t j = 0; j < MAX_WIDTH * MAX_HEIGHT; j++)
 			screens[s].buffer[j] = (uint_16t)0x0720;
 		screens[s].cursor_pos = 0;
 	}
@@ -47,9 +47,9 @@ void scroll()
 	if (i < MAX_WIDTH * MAX_HEIGHT)
 		return;
 	// if not, then we shift memory line[0] = 0 - 80; line[1] = 80 - 160; line[0] = line[1];
-	for (int j = 0; j < (MAX_HEIGHT - 1) * MAX_WIDTH; j++)
+	for (uint_32t j = 0; j < (MAX_HEIGHT - 1) * MAX_WIDTH; j++)
 		vga[j] = vga[j + MAX_WIDTH];
-	for (int j = (MAX_HEIGHT - 1) * MAX_WIDTH; j < MAX_HEIGHT * MAX_WIDTH; j++)
+	for (uint_32t j = (MAX_HEIGHT - 1) * MAX_WIDTH; j < MAX_HEIGHT * MAX_WIDTH; j++)
 		vga[j] = color;
 	i = (MAX_HEIGHT - 1) * MAX_WIDTH;
 }
@@ -96,14 +96,14 @@ void putchar(char c)
 	update_cursor(i);
 }
 
-void switch_screen(int screen_num)
+void switch_screen(uint_32t screen_num)
 {
 	if (screen_num < 0 || screen_num >= 3)
 		return;
 
 	// save current screen
 	struct screen *current = &screens[current_screen];
-	for (int i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
+	for (uint_32t i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
 		current->buffer[i] = vga[i];
 	current->cursor_pos = i;
 
@@ -111,7 +111,7 @@ void switch_screen(int screen_num)
 
 	// load new screen
 	struct screen *new_screen = &screens[screen_num];
-	for (int i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
+	for (uint_32t i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
 		vga[i] = new_screen->buffer[i];
 	i = new_screen->cursor_pos;
 	update_cursor(i);

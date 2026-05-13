@@ -17,8 +17,8 @@ void kernel_panic(const char *msg)
 	putstr("\n");
 	if (msg)
 	{
-		int pad = (80 - 8 - strlen(msg)) / 2;
-		for (int i = 0; i < pad; i++)
+		uint_32t pad = (80 - 8 - strlen(msg)) / 2;
+		for (uint_32t i = 0; i < pad; i++)
 			putstr(" ");
 		printf("Reason: %s\n", msg);
 	}

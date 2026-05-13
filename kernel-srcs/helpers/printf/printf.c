@@ -2,32 +2,32 @@
 #include "helpers.h"
 #include <stdarg.h>
 
-static int	display_arg(char c, va_list *ap)
+static uint_32t	display_arg(char c, va_list *ap)
 {
-	int	len;
+	uint_32t	len;
 
 	len = 0;
 	if (c == 'c')
-		len = print_char(va_arg(*ap, int));
+		len = print_char(va_arg(*ap, uint_32t));
 	else if (c == 's')
 		len = putstr(va_arg(*ap, char *));
 	else if (c == 'p')
 		len = print_ptr(va_arg(*ap, long long));
 	else if (c == 'd' || c == 'i')
-		len = print_nbr(va_arg(*ap, int));
+		len = print_nbr(va_arg(*ap, uint_32t));
 	else if (c == 'u')
-		len = print_unsigned_nbr(va_arg(*ap, unsigned int));
+		len = print_unsigned_nbr(va_arg(*ap, uint_32t));
 	else if (c == 'x' || c == 'X')
-		len = print_hex(va_arg(*ap, unsigned int), c);
+		len = print_hex(va_arg(*ap, uint_32t), c);
 	else if (c == '%')
 		len = print_char('%');
 	return (len);
 }
 
-int	printf(const char *str, ...)
+uint_32t	printf(const char *str, ...)
 {
-	int		i;
-	int		len;
+	uint_32t		i;
+	uint_32t		len;
 	va_list	ap;
 
 	if (!str)

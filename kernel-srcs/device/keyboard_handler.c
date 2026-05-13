@@ -1,6 +1,7 @@
 #include "keyboard_map.h"
 #include "kernel.h"
 #include "vga.h"
+#include "helpers.h"
 
 uint_8t inb(uint_16t port)
 {
@@ -21,13 +22,13 @@ bool_t check_if_left_pos_empty(uint_32t pos)
 	return (vga[pos - 1] & 0xFF) == ' ' || (vga[pos - 1] & 0xFF) == 0;
 }
 
-int get_last_filled_row(void)
+uint_32t get_last_filled_row(void)
 {
-	int last_row = 0;
+	uint_32t last_row = 0;
 
-	for (int row = 0; row < MAX_HEIGHT; row++)
+	for (uint_32t row = 0; row < MAX_HEIGHT; row++)
 	{
-		for (int col = 0; col < MAX_WIDTH; col++)
+		for (uint_32t col = 0; col < MAX_WIDTH; col++)
 		{
 			char c = (char)(vga[row * MAX_WIDTH + col] & 0xFF);
 			if (c != ' ' && c != 0)
@@ -59,8 +60,8 @@ void move_cursor(uint_8t scancode)
 	}
 	else if (scancode == 0x50) // DOWN
 	{
-		int current_row = i / MAX_WIDTH;
-		int last_row = get_last_filled_row();
+		uint_32t current_row = i / MAX_WIDTH;
+		uint_32t last_row = get_last_filled_row();
 		if (current_row < last_row && i < (MAX_HEIGHT - 1) * MAX_WIDTH)
 			i += MAX_WIDTH;
 	}
@@ -79,6 +80,8 @@ void keyboard_handler()
 	static bool_t ctrl_pressed = false_t;
 	static bool_t alt_pressed = false_t;
 	static bool_t prefix_e0 = false_t;
+	static char input_buffer[64] = {0};
+	static uint_32t buffer_pos = 0;
 	uint_8t scancode = inb(0x60);
 
 	// prefix e0 (for arrow keys)
@@ -143,7 +146,32 @@ void keyboard_handler()
 		return;
 	}
 
-	putchar(c);
+	if (c == '\n')
+	{
+		input_buffer[buffer_pos] = 0;
+		printf("\n[Buffer: '%s', len: %d]\n", input_buffer, buffer_pos);
+		// Use string comparison instead of character by character
+		if (strcmp(input_buffer, "stack") == 0)
+		{
+			printf("STACK COMMAND DETECTED\n");
+			clear_screen();
+			dump_stack();
+		}
+		// Clear buffer completely
+		for (uint_32t i = 0; i < 64; i++)
+			input_buffer[i] = 0;
+		buffer_pos = 0;
+		putchar(c);
+	}
+	else if (buffer_pos < 63)
+	{
+		input_buffer[buffer_pos++] = c;
+		putchar(c);
+	}
+	else
+	{
+		putchar(c);
+	}
 
 	// printf("\nScancode: %x, Char: %c, i: %d\n", scancode, c, i);
 }

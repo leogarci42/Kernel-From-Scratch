@@ -1,8 +1,10 @@
 #include "helpers.h"
+#include "kernel.h"
 
-int	print_unsigned_nbr(unsigned int nbr)
+
+uint_32t	print_unsigned_nbr(uint_32t nbr)
 {
-	int	len;
+	uint_32t	len;
 
 	put_unsigned_nbr(nbr);
 	len = 1;
@@ -14,9 +16,9 @@ int	print_unsigned_nbr(unsigned int nbr)
 	return (len);
 }
 
-int	print_hex(unsigned int nbr, char c)
+uint_32t	print_hex(uint_32t nbr, char c)
 {
-	int	len;
+	uint_32t	len;
 
 	if (c == 'x')
 		putnbr_base(nbr, "0123456789abcdef");
@@ -28,9 +30,9 @@ int	print_hex(unsigned int nbr, char c)
 	return (len);
 }
 
-int	print_nbr(int nbr)
+uint_32t	print_nbr(uint_32t nbr)
 {
-	int		len;
+	uint_32t		len;
 	long	l_nbr;
 
 	putnbr(nbr);
@@ -49,9 +51,9 @@ int	print_nbr(int nbr)
 	return (len);
 }
 
-int	print_ptr(unsigned long long nbr)
+uint_32t	print_ptr(unsigned long long nbr)
 {
-	int	len;
+	uint_32t	len;
 
 	if (nbr == 0)
 		return (0);
@@ -62,13 +64,13 @@ int	print_ptr(unsigned long long nbr)
 	return (len);
 }
 
-int	print_char(char c)
+uint_32t	print_char(char c)
 {
 	putchar(c);
 	return (1);
 }
 
-int	putstr(const char *s)
+uint_32t	putstr(const char *s)
 {
 	if (!s)
 		return (6);

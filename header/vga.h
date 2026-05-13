@@ -13,8 +13,8 @@ extern volatile uint_32t i;
 extern volatile uint_16t *vga;
 extern volatile uint_16t color;
 
-extern const int MAX_HEIGHT;
-extern const int MAX_WIDTH;
+extern const uint_32t MAX_HEIGHT;
+extern const uint_32t MAX_WIDTH;
 
 #define NMI_disable_bit 1
 

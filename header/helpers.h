@@ -1,24 +1,27 @@
 #ifndef HELPERS_H
 # define HELPERS_H
+#include "kernel.h"
 
 /*				print helpers			*/
 
-int	print_unsigned_nbr(unsigned int nbr);
-int	print_hex(unsigned int nbr, char c);
-int	print_nbr(int nbr);
-int	print_ptr(unsigned long long nbr);
-int	print_char(char c);
-int	putstr(const char *s);
+uint_32t	print_unsigned_nbr(uint_32t nbr);
+uint_32t	print_hex(uint_32t nbr, char c);
+uint_32t	print_nbr(uint_32t nbr);
+uint_32t	print_ptr(unsigned long long nbr);
+uint_32t	print_char(char c);
+uint_32t	putstr(const char *s);
 
 /*			more common helpers			*/
 
-int strlen(const char *s);
-int	strlen_base(unsigned int nbr);
-unsigned int	check_base(char *base);
-void	putnbr_base(unsigned int nbr, char *base);
-void	putnbr(int n);
+uint_32t strlen(const char *s);
+uint_32t	strlen_base(uint_32t nbr);
+uint_32t	check_base(char *base);
+int strcmp(const char *s1, const char *s2);
+void	putnbr_base(uint_32t nbr, char *base);
+void	putnbr(uint_32t n);
 void	putlongnbr_base(unsigned long long nbr, char *base);
-void	put_unsigned_nbr(unsigned int n);
+void	put_unsigned_nbr(uint_32t n);
 void putchar(char c);
+void dump_stack(void);
 
 #endif

@@ -16,13 +16,13 @@ typedef uint_8t bool_t;
 
 void init_screens(void);
 void clear_screen();
-void update_cursor(int pos);
+void update_cursor(uint_32t pos);
 void keyboard_handler();
 void putchar(char c);
 void change_color();
-void switch_screen(int screen_num);
-int	putstr(const char *s);
-int	printf(const char *str, ...);
+void switch_screen(uint_32t screen_num);
+uint_32t	putstr(const char *s);
+uint_32t	printf(const char *str, ...);
 void gdt_init(void);
 void gdt_install(void);
 
@@ -34,5 +34,9 @@ void outb(uint_16t port, uint_8t val);
 /*			kernel panic		*/
 
 void kernel_panic(const char *msg);
+
+/*			dump_stack			*/
+
+void dump_stack(void);
 
 #endif
