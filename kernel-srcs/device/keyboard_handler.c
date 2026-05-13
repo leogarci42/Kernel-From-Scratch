@@ -80,7 +80,7 @@ void keyboard_handler()
 	static bool_t ctrl_pressed = false_t;
 	static bool_t alt_pressed = false_t;
 	static bool_t prefix_e0 = false_t;
-	static char input_buffer[64] = {0};
+	static char input_buffer[64];
 	static uint_32t buffer_pos = 0;
 	uint_8t scancode = inb(0x60);
 
@@ -145,22 +145,22 @@ void keyboard_handler()
 		change_color();
 		return;
 	}
-
 	if (c == '\n')
 	{
-		input_buffer[buffer_pos] = 0;
-		printf("\n[Buffer: '%s', len: %d]\n", input_buffer, buffer_pos);
-		// Use string comparison instead of character by character
-		if (strcmp(input_buffer, "stack") == 0)
+		if (buffer_pos < 64)
+			input_buffer[buffer_pos] = 0;
+		if (buffer_pos == 5 && 
+		    input_buffer[0] == 's' && input_buffer[1] == 't' && 
+		    input_buffer[2] == 'a' && input_buffer[3] == 'c' && 
+		    input_buffer[4] == 'k')
 		{
-			printf("STACK COMMAND DETECTED\n");
+			putstr("STACK TRACE:\n");
 			clear_screen();
 			dump_stack();
 		}
-		// Clear buffer completely
-		for (uint_32t i = 0; i < 64; i++)
-			input_buffer[i] = 0;
 		buffer_pos = 0;
+		for (int i = 0; i < 64; i++)
+			input_buffer[i] = 0;
 		putchar(c);
 	}
 	else if (buffer_pos < 63)
@@ -169,9 +169,5 @@ void keyboard_handler()
 		putchar(c);
 	}
 	else
-	{
 		putchar(c);
-	}
-
-	// printf("\nScancode: %x, Char: %c, i: %d\n", scancode, c, i);
 }
