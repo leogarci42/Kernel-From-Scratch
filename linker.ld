@@ -1,50 +1,70 @@
 ENTRY(start)
 
-PHDRS
-{
-  text PT_LOAD FLAGS (READ|EXEC);
-  data PT_LOAD FLAGS (READ|WRITE);
-}
-
 SECTIONS
 {
-    . = 0x100000;
+    KERNEL_VMA = 0xC0000000;
+    KERNEL_LMA = 0x00100000;
 
-    .multiboot : { KEEP(*(.multiboot)) } :text
+    . = KERNEL_LMA;
+    __boot_phys_start = .;
 
-    .text : {
+    .multiboot : {
+        KEEP(*(.multiboot))
+    }
+
+    .boot.text : {
+        *(.boot.text)
+    }
+
+    .boot.data : {
+        *(.boot.data)
+    }
+
+    .boot.bss (NOLOAD) : {
+        *(.boot.bss)
+    }
+
+    __boot_phys_end = .;
+
+    . += KERNEL_VMA;
+
+    __kernel_virt_start = .;
+    __kernel_phys_start = __kernel_virt_start - KERNEL_VMA;
+
+    .text : AT(ADDR(.text) - KERNEL_VMA) {
         *(.text)
-    } :text
+    }
 
-    .rodata : {
+    .rodata : AT(ADDR(.rodata) - KERNEL_VMA) {
         *(.rodata)
-    } :text
+    }
 
-    /* GDT placed after code/rodata so data PHDRS starts after text */
-    .gdt : {
+    .gdt : AT(ADDR(.gdt) - KERNEL_VMA) {
         __gdt_start = .;
         *(.gdt)
         __gdt_end = .;
-    } :data
+    }
 
-    .data : {
+    .data : AT(ADDR(.data) - KERNEL_VMA) {
         *(.data)
-    } :data
+    }
 
-    .bss (NOLOAD) : {
+    .bss (NOLOAD) : AT(ADDR(.bss) - KERNEL_VMA) {
         __bss_start = .;
         *(.bss)
         *(COMMON)
         __bss_end = .;
-    } :data
+    }
 
-    end_of_kernel = .;
-
-    .stack (NOLOAD) : {
+    .stack (NOLOAD) : AT(ADDR(.stack) - KERNEL_VMA) {
         __stack_bottom = .;
         . = . + 0x4000;
         __stack_top = .;
-    } :data
+    }
+
+    __kernel_virt_end = .;
+    __kernel_phys_end = __kernel_virt_end - KERNEL_VMA;
+    end_of_kernel = __kernel_virt_end;
 
     /DISCARD/ : { *(.eh_frame) *(.comment) }
 }

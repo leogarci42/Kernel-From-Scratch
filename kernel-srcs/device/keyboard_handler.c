@@ -126,6 +126,8 @@ void keyboard_handler()
 	// key release
 	if (scancode & 0x80)
 		return;
+	if (scancode >= sizeof(keyboard_map))
+		return;
 
 	// get char from scancode
 	char c = keyboard_map[scancode];

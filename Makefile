@@ -85,12 +85,14 @@ iso: $(NAME)
 	@cp $(NAME) $(ISO_DIR)/boot/$(NAME)
 	@echo 'set timeout=0' > $(ISO_DIR)/boot/grub/grub.cfg
 	@echo 'set default=0' >> $(ISO_DIR)/boot/grub/grub.cfg
+	@echo 'set gfxpayload=text' >> $(ISO_DIR)/boot/grub/grub.cfg
+	@echo 'terminal_output console' >> $(ISO_DIR)/boot/grub/grub.cfg
 	@echo 'menuentry "$(NAME)" {' >> $(ISO_DIR)/boot/grub/grub.cfg
 	@echo '  multiboot /boot/$(NAME)' >> $(ISO_DIR)/boot/grub/grub.cfg
 	@echo '  boot' >> $(ISO_DIR)/boot/grub/grub.cfg
 	@echo '}' >> $(ISO_DIR)/boot/grub/grub.cfg
 	@echo "$(YELLOW_CMD)Attempting grub-mkrescue...$(RESET_CMD)"
-	-grub-mkrescue -o $(ISO_NAME) $(ISO_DIR) 2>/dev/null || echo "$(RED_CMD)GRUB ISO build failed (missing mformat).$(RESET_CMD)"
+	-grub-mkrescue -o $(ISO) $(ISO_DIR) 2>/dev/null || echo "$(RED_CMD)GRUB ISO build failed (missing mformat).$(RESET_CMD)"
 
 run: fclean all
 	@echo "$(BLUE_CMD)Starting QEMU (Multiboot Compliant)...$(RESET_CMD)"
@@ -102,4 +104,4 @@ clean:
 
 fclean: clean
 	@echo "$(RED_CMD)Deleting artifacts...$(RESET_CMD)"
-	@rm -f $(NAME) $(ISO_NAME) $(GENERATED_SYM)
+	@rm -f $(NAME) $(ISO) $(GENERATED_SYM)

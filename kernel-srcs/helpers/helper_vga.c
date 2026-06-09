@@ -26,9 +26,10 @@ void update_cursor(uint_32t pos)
 
 void clear_screen()
 {
-	// bc GRUB leaves garbage on screen
-	for (uint_32t i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
-		vga[i] = (uint_16t)0x0720;
+	for (uint_32t j = 0; j < MAX_WIDTH * MAX_HEIGHT; j++)
+		vga[j] = color | ' ';
+	i = 0;
+	update_cursor(0);
 }
 
 void init_screens(void)
@@ -50,7 +51,7 @@ void scroll()
 	for (uint_32t j = 0; j < (MAX_HEIGHT - 1) * MAX_WIDTH; j++)
 		vga[j] = vga[j + MAX_WIDTH];
 	for (uint_32t j = (MAX_HEIGHT - 1) * MAX_WIDTH; j < MAX_HEIGHT * MAX_WIDTH; j++)
-		vga[j] = color;
+		vga[j] = color | ' ';
 	i = (MAX_HEIGHT - 1) * MAX_WIDTH;
 }
 
@@ -73,6 +74,11 @@ void putchar(char c)
 	// basically it's bringing the write to the next line (the one under it)
 	else if (c == '\b')
 	{
+		if (i == 0)
+		{
+			update_cursor(0);
+			return;
+		}
 		//if at the start of  a newline
 		if (i % MAX_WIDTH == 0) 
 		{
@@ -98,9 +104,8 @@ void putchar(char c)
 
 void switch_screen(uint_32t screen_num)
 {
-	if (screen_num < 0 || screen_num >= 3)
+	if (screen_num >= 3)
 		return;
-
 	// save current screen
 	struct screen *current = &screens[current_screen];
 	for (uint_32t i = 0; i < MAX_WIDTH * MAX_HEIGHT; i++)
@@ -115,6 +120,5 @@ void switch_screen(uint_32t screen_num)
 		vga[i] = new_screen->buffer[i];
 	i = new_screen->cursor_pos;
 	update_cursor(i);
-
 	current_screen = screen_num;
 }
